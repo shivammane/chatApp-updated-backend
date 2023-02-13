@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
 const http = require("http").createServer(app);
@@ -19,9 +20,10 @@ const messeges = require("./routes/messeges_route");
 const PORT = process.env.PORT || 3000;
 
 //built-in middlewares
-app.use(cors({ origin: process.env.CORS_ORIGIN_URL }));
+app.use(cors({ origin: process.env.CORS_ORIGIN_URL, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //routes middlewares
 app.use(login);

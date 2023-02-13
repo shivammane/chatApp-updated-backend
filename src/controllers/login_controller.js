@@ -1,4 +1,5 @@
 const mysql = require("./mysql_connector");
+const jwt = require("jsonwebtoken");
 
 module.exports = (req, res) => {
     const data = req.body;
@@ -7,7 +8,12 @@ module.exports = (req, res) => {
     where email="${data.email}" and password="${data.password}"`,
         (err, result) => {
             if (err) throw err;
-            result.length != 0 ? res.send(result) : res.send([{ email: "false" }]);
+            if (result.length != 0) {
+                const token = jwt.sign({ ...result }, process.env.JWT_SECRET_KEY);
+                res.cookie("token", token).send(result);
+            } else {
+                res.send([{ email: "false" }]);
+            }
         }
     );
 };
